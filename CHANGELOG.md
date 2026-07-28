@@ -17,15 +17,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Verified (OpenSCAP)
 
-- **`cis-l1`** — score **98.67%** (floor 90.0%) · gate **PASS** · evidence `20260728T094429Z`
-  - Remaining counted failures: `configure_custom_crypto_policy_cis`
-- **`cis-l2`** — score **98.7%** (floor 90.0%) · gate **PASS** · evidence `20260728T094624Z`
-  - Remaining counted failures: `configure_custom_crypto_policy_cis`
+- **`cis-l1`** — score **97.33%** (floor 90.0%) · gate **PASS** · evidence `20260726T140136Z`
+  - Remaining counted failures: `configure_custom_crypto_policy_cis, file_permissions_ungroupowned`
+- **`cis-l2`** — score **97.4%** (floor 90.0%) · gate **PASS** · evidence `20260726T140502Z`
+  - Remaining counted failures: `configure_custom_crypto_policy_cis, file_permissions_ungroupowned`
 
 ### Provenance
 
-- Factory pipeline: https://github.com/stigready/stigforge/actions/runs/30348467615
-- Factory commit: `49f1c019fbf7ba7f8edc345d79321ed45f9534de`
+- Factory pipeline: https://github.com/stigready/stigforge/actions/runs/30353408831
+- Factory commit: `5601d6c388051bf9f7636b086d93888a709b8b31`
 
 ## [0.2.1-private-review] - 2026-07-28
 

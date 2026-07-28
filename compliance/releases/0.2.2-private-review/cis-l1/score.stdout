@@ -1,17 +1,18 @@
 {
-  "pass": 74,
-  "fail": 1,
+  "pass": 73,
+  "fail": 2,
   "other": 0,
   "total_scored": 75,
-  "score": 98.67,
+  "score": 97.33,
   "min_score": 90.0,
   "meets_floor": true,
   "gate_pass": true,
   "enforce": true,
   "failures": [
-    "configure_custom_crypto_policy_cis"
+    "configure_custom_crypto_policy_cis",
+    "file_permissions_ungroupowned"
   ],
   "regressions": [],
   "baseline": null,
-  "openscap_line": "OpenSCAP: pass=74 fail=1 score=98.7% (target 90%)"
+  "openscap_line": "OpenSCAP: pass=73 fail=2 score=97.3% (target 90%)"
 }

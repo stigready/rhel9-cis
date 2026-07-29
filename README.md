@@ -2,7 +2,7 @@
 
 **Ansible hardening role** for **RHEL 9** (CIS Benchmark). Suitable for playbooks, Packer/Ansible provisioners, and golden-image pipelines. Search keywords: `ansible`, `ansible-role`, `cis`, `cis-benchmark`, `cis-hardening`, `compliance`, `devsecops`, `hardening`, `infrastructure`, `openscap`, `redhat`, `rhel`, `rhel9`, `security`.
 
-StigForge-exported Ansible role **`rhel9_cis`** · release **`0.2.2-private-review`**.
+StigForge-exported Ansible role **`rhel9_cis`** · release **`0.2.3-private-review`**.
 Matrix cell status: **`green`**.
 
 ## Install (Ansible Galaxy)
@@ -13,7 +13,7 @@ lives under `compliance/` and is not loaded when the role runs.
 From **Ansible Galaxy** (after import; namespace `stigready`):
 
 ```bash
-ansible-galaxy role install stigready.rhel9_cis,0.2.2-private-review
+ansible-galaxy role install stigready.rhel9_cis,0.2.3-private-review
 ```
 
 From **GitHub** (public):
@@ -23,7 +23,7 @@ From **GitHub** (public):
 roles:
   - src: https://github.com/stigready/rhel9-cis
     scm: git
-    version: v0.2.2-private-review   # or an immutable commit SHA
+    version: v0.2.3-private-review   # or an immutable commit SHA
     name: rhel9_cis
 ```
 
@@ -41,7 +41,7 @@ Evidence was produced by **docker verify + OpenSCAP** on the factory CI run cite
 | `cis-l1` | **97.33%** ✓ | 90.0% | PASS ✓ | rc 0 | 20260726T140136Z |
 | `cis-l2` | **97.4%** ✓ | 90.0% | PASS ✓ | rc 0 | 20260726T140502Z |
 
-Full artifacts per profile: `compliance/releases/0.2.2-private-review/<profile>/` (`score.json`, `results.xml`, `report.html`, `evidence.json`, `evidence-report.html`, `poam.md`).
+Full artifacts per profile: `compliance/releases/0.2.3-private-review/<profile>/` (`score.json`, `results.xml`, `report.html`, `evidence.json`, `evidence-report.html`, `poam.md`).
 
 ## Reports & review
 
@@ -54,7 +54,7 @@ Full artifacts per profile: `compliance/releases/0.2.2-private-review/<profile>/
 Re-run OpenSCAP in Docker and compare to this release's evidence:
 
 ```bash
-make prove RELEASE=0.2.2-private-review
+make prove RELEASE=0.2.3-private-review
 ```
 
 Or score your own `results.xml`: see **[compliance/README.md](compliance/README.md)**.
@@ -66,7 +66,7 @@ Or score your own `results.xml`: see **[compliance/README.md](compliance/README.
 
 ## Factory
 
-- Monorepo: [stigready/stigforge](https://github.com/stigready/stigforge) @ `5601d6c388051bf9f7636b086d93888a709b8b31`
-- CI run: https://github.com/stigready/stigforge/actions/runs/30353408831
+- Monorepo: [stigready/stigforge](https://github.com/stigready/stigforge) @ `e8e323a3af3258bee63ebc1a873ba26c0cc12049`
+- CI run: https://github.com/stigready/stigforge/actions/runs/30435216810
 - Catalog: [https://stigready.com/#stigforge](https://stigready.com/#stigforge)
 

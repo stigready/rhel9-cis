@@ -2,6 +2,23 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.3-private-review] - 2026-07-29
+
+### Changed
+- StigForge export refresh for `rhel9_cis` at `0.2.3-private-review`.
+
+### Verified (OpenSCAP)
+
+- **`cis-l1`** — score **97.33%** (floor 90.0%) · gate **PASS** · evidence `20260726T140136Z`
+  - Remaining counted failures: `configure_custom_crypto_policy_cis, file_permissions_ungroupowned`
+- **`cis-l2`** — score **97.4%** (floor 90.0%) · gate **PASS** · evidence `20260726T140502Z`
+  - Remaining counted failures: `configure_custom_crypto_policy_cis, file_permissions_ungroupowned`
+
+### Provenance
+
+- Factory pipeline: https://github.com/stigready/stigforge/actions/runs/30435216810
+- Factory commit: `e8e323a3af3258bee63ebc1a873ba26c0cc12049`
+
 ## [0.2.2-private-review] - 2026-07-28
 
 ### Added

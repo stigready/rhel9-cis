@@ -1,0 +1,21 @@
+---
+# Beyond-benchmark product hardening, moved out of the factory (decision 0021).
+#
+# sysctl_fs_suid_dumpable is NOT in the RHEL cis profile — it sits in anssi/ccn/hipaa/
+# pci-dss. rhel8_cis and ubuntu24_cis happen to ship it; rhel9_cis does not, and the
+# factory was applying it to every hardened image. Added here so removing the factory
+# block changes nothing on this cell.
+#
+# No rule-id tag on purpose: the generator derives a toggle from one, and a product
+# decision is not a per-rule opt-out.
+- name: Product hardening | Disable core dumps for SUID programs (fs.suid_dumpable)
+  ansible.posix.sysctl:
+    name: fs.suid_dumpable
+    value: '0'
+    sysctl_file: /etc/sysctl.d/91-stigready-product.conf
+    sysctl_set: true
+    reload: true
+    state: present
+  tags:
+  - low_disruption
+  - no_reboot_needed

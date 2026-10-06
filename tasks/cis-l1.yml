@@ -1,4 +1,4 @@
-# Source: ComplianceAsCode/content (scap-security-guide) — BSD-3-Clause
+# Source: ComplianceAsCode/content (scap-security-guide) - BSD-3-Clause
 # Imported by StigForge; cloud-breaker tasks stripped per policy/cloud-ami.yml
 ---
 - block:
@@ -31516,3 +31516,22 @@
         raised an error (module or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the
         resulting system state independently.'
   when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sshd_set_maxstartups | default(true) | bool)
+- block:
+  - name: Product hardening | Disable core dumps for SUID programs (fs.suid_dumpable)
+    ansible.posix.sysctl:
+      name: fs.suid_dumpable
+      value: '0'
+      sysctl_file: /etc/sysctl.d/91-stigready-product.conf
+      sysctl_set: true
+      reload: true
+      state: present
+    tags:
+    - low_disruption
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Product hardening | Disable core dumps for SUID programs (fs.suid_dumpable)''
+      (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Product hardening | Disable core dumps for SUID programs (fs.suid_dumpable)'' raised an error (module
+        or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state
+        independently.'

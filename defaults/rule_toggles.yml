@@ -38,6 +38,7 @@ rhel9cis_accounts_user_interactive_home_directory_exists: true
 rhel9cis_aide_build_database: true
 rhel9cis_aide_check_audit_tools: true
 rhel9cis_aide_periodic_cron_checking: true
+rhel9cis_always: true
 rhel9cis_audit_rules_dac_modification_chmod: true
 rhel9cis_audit_rules_dac_modification_chown: true
 rhel9cis_audit_rules_dac_modification_fchmod: true
@@ -129,6 +130,7 @@ rhel9cis_disable_host_auth: true
 rhel9cis_enable_authselect: true
 rhel9cis_ensure_gpgcheck_globally_activated: true
 rhel9cis_ensure_gpgcheck_never_disabled: true
+rhel9cis_ensure_journald_and_rsyslog_not_active_together: true
 rhel9cis_ensure_pam_wheel_group_empty: true
 rhel9cis_ensure_redhat_gpgkey_installed: true
 rhel9cis_file_at_allow_exists: true
@@ -215,6 +217,7 @@ rhel9cis_file_permissions_etc_shells: true
 rhel9cis_file_permissions_grub2_cfg: true
 rhel9cis_file_permissions_home_directories: true
 rhel9cis_file_permissions_sshd_config: true
+rhel9cis_file_permissions_sshd_drop_in_config: true
 rhel9cis_file_permissions_sshd_private_key: true
 rhel9cis_file_permissions_sshd_pub_key: true
 rhel9cis_file_permissions_user_cfg: true
@@ -314,6 +317,7 @@ rhel9cis_sshd_disable_root_login: true
 rhel9cis_sshd_do_not_permit_user_env: true
 rhel9cis_sshd_enable_pam: true
 rhel9cis_sshd_enable_warning_banner_net: true
+rhel9cis_sshd_limit_user_access: true
 rhel9cis_sshd_set_idle_timeout: true
 rhel9cis_sshd_set_keepalive: true
 rhel9cis_sshd_set_login_grace_time: true
@@ -324,6 +328,7 @@ rhel9cis_sshd_set_maxstartups: true
 rhel9cis_sudo_add_use_pty: true
 rhel9cis_sudo_custom_logfile: true
 rhel9cis_sudo_remove_no_authenticate: true
+rhel9cis_sudo_require_reauthentication: true
 rhel9cis_sysctl_kernel_randomize_va_space: true
 rhel9cis_sysctl_kernel_yama_ptrace_scope: true
 rhel9cis_sysctl_net_ipv4_conf_all_accept_redirects: true
@@ -349,5 +354,6 @@ rhel9cis_sysctl_net_ipv6_conf_all_forwarding: true
 rhel9cis_sysctl_net_ipv6_conf_default_accept_ra: true
 rhel9cis_sysctl_net_ipv6_conf_default_accept_redirects: true
 rhel9cis_sysctl_net_ipv6_conf_default_accept_source_route: true
+rhel9cis_use_pam_wheel_group_for_su: true
 rhel9cis_wireless_disable_interfaces: true
 rhel9cis_xwindows_runlevel_target: true

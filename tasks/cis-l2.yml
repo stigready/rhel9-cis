@@ -2958,6 +2958,161 @@
         and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
   when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sudo_remove_no_authenticate | default(true) | bool)
 - block:
+  - name: Require Re-Authentication When Using the sudo Command - Find /etc/sudoers.d/* files containing 'Defaults timestamp_timeout'
+    ansible.builtin.find:
+      path: /etc/sudoers.d
+      patterns: '*'
+      contains: ^[\s]*Defaults\s.*\btimestamp_timeout[\s]*=.*
+    register: sudoers_d_defaults_timestamp_timeout
+    when:
+    - '"kernel-core" in ansible_facts.packages'
+    - '"sudo" in ansible_facts.packages'
+    tags:
+    - CCE-90029-0
+    - DISA-STIG-RHEL-09-432015
+    - NIST-800-53-IA-11
+    - PCI-DSSv4-2.2
+    - PCI-DSSv4-2.2.6
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+    - restrict_strategy
+    - sudo_require_reauthentication
+  rescue:
+  - name: 'StigForge: continue after error in "Require Re-Authentication When Using the sudo Command - Find /etc/sudoers.d/*
+      files containing ''Defaults timestamp_timeout''" (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: "Require Re-Authentication When Using the sudo Command - Find /etc/sudoers.d/* files containing ''Defaults
+        timestamp_timeout''" raised an error (module or templating) and was skipped; continuing so later rules still run.
+        OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sudo_require_reauthentication | default(true) | bool)
+- block:
+  - name: Require Re-Authentication When Using the sudo Command - Remove 'Defaults timestamp_timeout' from /etc/sudoers.d/*
+      files
+    ansible.builtin.lineinfile:
+      path: '{{ item.path }}'
+      regexp: ^[\s]*Defaults\s.*\btimestamp_timeout[\s]*=.*
+      state: absent
+    with_items: '{{ sudoers_d_defaults_timestamp_timeout.files }}'
+    when:
+    - '"kernel-core" in ansible_facts.packages'
+    - '"sudo" in ansible_facts.packages'
+    tags:
+    - CCE-90029-0
+    - DISA-STIG-RHEL-09-432015
+    - NIST-800-53-IA-11
+    - PCI-DSSv4-2.2
+    - PCI-DSSv4-2.2.6
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+    - restrict_strategy
+    - sudo_require_reauthentication
+  rescue:
+  - name: 'StigForge: continue after error in "Require Re-Authentication When Using the sudo Command - Remove ''Defaults timestamp_timeout''
+      from /etc/sudoers.d/* files" (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: "Require Re-Authentication When Using the sudo Command - Remove ''Defaults timestamp_timeout'' from
+        /etc/sudoers.d/* files" raised an error (module or templating) and was skipped; continuing so later rules still run.
+        OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sudo_require_reauthentication | default(true) | bool)
+- block:
+  - name: Require Re-Authentication When Using the sudo Command - Ensure timestamp_timeout has the appropriate value in /etc/sudoers
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers
+      regexp: ^[\s]*Defaults\s(.*)\btimestamp_timeout[\s]*=[\s]*[-]?\w+\b(.*)$
+      line: Defaults \1timestamp_timeout={{ var_sudo_timestamp_timeout }}\2
+      validate: /usr/sbin/visudo -cf %s
+      backrefs: true
+    register: edit_sudoers_timestamp_timeout_option
+    when:
+    - '"kernel-core" in ansible_facts.packages'
+    - '"sudo" in ansible_facts.packages'
+    tags:
+    - CCE-90029-0
+    - DISA-STIG-RHEL-09-432015
+    - NIST-800-53-IA-11
+    - PCI-DSSv4-2.2
+    - PCI-DSSv4-2.2.6
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+    - restrict_strategy
+    - sudo_require_reauthentication
+  rescue:
+  - name: 'StigForge: continue after error in ''Require Re-Authentication When Using the sudo Command - Ensure timestamp_timeout
+      has the appropriate value in /etc/sudoers'' (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Require Re-Authentication When Using the sudo Command - Ensure timestamp_timeout has the appropriate
+        value in /etc/sudoers'' raised an error (module or templating) and was skipped; continuing so later rules still run.
+        OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sudo_require_reauthentication | default(true) | bool)
+- block:
+  - name: Require Re-Authentication When Using the sudo Command - Enable timestamp_timeout option with correct value in /etc/sudoers
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers
+      line: Defaults timestamp_timeout={{ var_sudo_timestamp_timeout }}
+      validate: /usr/sbin/visudo -cf %s
+    when:
+    - '"kernel-core" in ansible_facts.packages'
+    - '"sudo" in ansible_facts.packages'
+    - 'edit_sudoers_timestamp_timeout_option is defined and not edit_sudoers_timestamp_timeout_option.changed
+
+      '
+    tags:
+    - CCE-90029-0
+    - DISA-STIG-RHEL-09-432015
+    - NIST-800-53-IA-11
+    - PCI-DSSv4-2.2
+    - PCI-DSSv4-2.2.6
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+    - restrict_strategy
+    - sudo_require_reauthentication
+  rescue:
+  - name: 'StigForge: continue after error in ''Require Re-Authentication When Using the sudo Command - Enable timestamp_timeout
+      option with correct value in /etc/sudoers'' (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Require Re-Authentication When Using the sudo Command - Enable timestamp_timeout option with correct
+        value in /etc/sudoers'' raised an error (module or templating) and was skipped; continuing so later rules still run.
+        OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sudo_require_reauthentication | default(true) | bool)
+- block:
+  - name: Require Re-Authentication When Using the sudo Command - Remove timestamp_timeout wrong values in /etc/sudoers
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers
+      regexp: ^[\s]*Defaults\s.*\btimestamp_timeout[\s]*=[\s]*(?!{{ var_sudo_timestamp_timeout }}\b)[-]?\w+\b.*$
+      state: absent
+      validate: /usr/sbin/visudo -cf %s
+    when:
+    - '"kernel-core" in ansible_facts.packages'
+    - '"sudo" in ansible_facts.packages'
+    tags:
+    - CCE-90029-0
+    - DISA-STIG-RHEL-09-432015
+    - NIST-800-53-IA-11
+    - PCI-DSSv4-2.2
+    - PCI-DSSv4-2.2.6
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+    - restrict_strategy
+    - sudo_require_reauthentication
+  rescue:
+  - name: 'StigForge: continue after error in ''Require Re-Authentication When Using the sudo Command - Remove timestamp_timeout
+      wrong values in /etc/sudoers'' (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Require Re-Authentication When Using the sudo Command - Remove timestamp_timeout wrong values in
+        /etc/sudoers'' raised an error (module or templating) and was skipped; continuing so later rules still run. OpenSCAP
+        evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sudo_require_reauthentication | default(true) | bool)
+- block:
   - name: Ensure GPG check is globally activated
     community.general.ini_file:
       dest: /etc/dnf/dnf.conf
@@ -59790,3 +59945,267 @@
       msg: 'StigForge: ''Product hardening | Disable core dumps for SUID programs (fs.suid_dumpable)'' raised an error (module
         or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state
         independently.'
+- block:
+  - name: Gather the package facts for the supplement tasks
+    ansible.builtin.package_facts:
+      manager: auto
+    tags:
+    - always
+  rescue:
+  - name: 'StigForge: continue after error in ''Gather the package facts for the supplement tasks'' (OpenSCAP is the score
+      gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Gather the package facts for the supplement tasks'' raised an error (module or templating) and was
+        skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_always | default(true) | bool)
+- block:
+  - name: Ensure the group used by pam_wheel for su exists
+    ansible.builtin.group:
+      name: sugroup
+      state: present
+    tags:
+    - use_pam_wheel_group_for_su
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Ensure the group used by pam_wheel for su exists'' (OpenSCAP is the score
+      gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Ensure the group used by pam_wheel for su exists'' raised an error (module or templating) and was
+        skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_use_pam_wheel_group_for_su | default(true) | bool)
+- block:
+  - name: Restrict su to the sugroup group with pam_wheel (use_pam_wheel_group_for_su)
+    ansible.builtin.lineinfile:
+      path: /etc/pam.d/su
+      regexp: ^\s*auth\s+required\s+pam_wheel\.so
+      line: auth            required        pam_wheel.so use_uid group=sugroup
+      insertafter: ^#?\s*auth\s+required\s+pam_wheel\.so
+      state: present
+    tags:
+    - use_pam_wheel_group_for_su
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Restrict su to the sugroup group with pam_wheel (use_pam_wheel_group_for_su)''
+      (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Restrict su to the sugroup group with pam_wheel (use_pam_wheel_group_for_su)'' raised an error (module
+        or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state
+        independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_use_pam_wheel_group_for_su | default(true) | bool)
+- block:
+  - name: Stop and disable rsyslog so journald is the only active logging service
+    ansible.builtin.systemd:
+      name: rsyslog
+      enabled: false
+      state: stopped
+    when: '"rsyslog" in ansible_facts.packages'
+    tags:
+    - ensure_journald_and_rsyslog_not_active_together
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Stop and disable rsyslog so journald is the only active logging service''
+      (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Stop and disable rsyslog so journald is the only active logging service'' raised an error (module
+        or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state
+        independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_ensure_journald_and_rsyslog_not_active_together | default(true)
+    | bool)
+- block:
+  - name: Limit sshd user access by denying root by name (sshd_limit_user_access)
+    ansible.builtin.lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: ^\s*DenyUsers\s
+      line: DenyUsers root
+      insertbefore: ^\s*Match\s
+      firstmatch: true
+      state: present
+      validate: /usr/sbin/sshd -t -f %s
+    tags:
+    - sshd_limit_user_access
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Limit sshd user access by denying root by name (sshd_limit_user_access)''
+      (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Limit sshd user access by denying root by name (sshd_limit_user_access)'' raised an error (module
+        or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state
+        independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sshd_limit_user_access | default(true) | bool)
+- block:
+  - name: Set journald Compress=yes in journald.conf (journald_compress)
+    ansible.builtin.lineinfile:
+      path: /etc/systemd/journald.conf
+      regexp: ^\s*#?\s*Compress=
+      line: Compress=yes
+      insertafter: ^\[Journal\]
+      state: present
+    tags:
+    - journald_compress
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Set journald Compress=yes in journald.conf (journald_compress)'' (OpenSCAP
+      is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Set journald Compress=yes in journald.conf (journald_compress)'' raised an error (module or templating)
+        and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_journald_compress | default(true) | bool)
+- block:
+  - name: Set journald Storage=persistent in journald.conf (journald_storage)
+    ansible.builtin.lineinfile:
+      path: /etc/systemd/journald.conf
+      regexp: ^\s*#?\s*Storage=
+      line: Storage=persistent
+      insertafter: ^\[Journal\]
+      state: present
+    tags:
+    - journald_storage
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Set journald Storage=persistent in journald.conf (journald_storage)'' (OpenSCAP
+      is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Set journald Storage=persistent in journald.conf (journald_storage)'' raised an error (module or
+        templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_journald_storage | default(true) | bool)
+- block:
+  - name: Run chronyd as the chrony user (chronyd_run_as_chrony_user)
+    ansible.builtin.lineinfile:
+      path: /etc/sysconfig/chronyd
+      backrefs: true
+      regexp: ^(OPTIONS=")((?!.*-u chrony)[^"]*)"
+      line: \1\2 -u chrony"
+    when: '"chrony" in ansible_facts.packages'
+    tags:
+    - chronyd_run_as_chrony_user
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Run chronyd as the chrony user (chronyd_run_as_chrony_user)'' (OpenSCAP is
+      the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Run chronyd as the chrony user (chronyd_run_as_chrony_user)'' raised an error (module or templating)
+        and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_chronyd_run_as_chrony_user | default(true) | bool)
+- block:
+  - name: Remove the rsync package (package_rsync_removed, AlmaLinux 9 CIS)
+    ansible.builtin.package:
+      name: rsync
+      state: absent
+    when: ansible_facts['distribution'] == 'AlmaLinux'
+    tags:
+    - package_rsync_removed
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Remove the rsync package (package_rsync_removed, AlmaLinux 9 CIS)'' (OpenSCAP
+      is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Remove the rsync package (package_rsync_removed, AlmaLinux 9 CIS)'' raised an error (module or templating)
+        and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_package_rsync_removed | default(true) | bool)
+- block:
+  - name: AIDE audit tools carry the selinux attribute (aide_check_audit_tools, AlmaLinux 9 CIS)
+    ansible.builtin.lineinfile:
+      path: /etc/aide.conf
+      regexp: ^{{ item }}\s
+      line: '{{ item }} p+i+n+u+g+s+b+acl+selinux+xattrs+sha512'
+    loop:
+    - /usr/sbin/auditctl
+    - /usr/sbin/auditd
+    - /usr/sbin/ausearch
+    - /usr/sbin/aureport
+    - /usr/sbin/autrace
+    - /usr/sbin/augenrules
+    when:
+    - ansible_facts['distribution'] == 'AlmaLinux'
+    - '"aide" in ansible_facts.packages'
+    tags:
+    - aide_check_audit_tools
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''AIDE audit tools carry the selinux attribute (aide_check_audit_tools, AlmaLinux
+      9 CIS)'' (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''AIDE audit tools carry the selinux attribute (aide_check_audit_tools, AlmaLinux 9 CIS)'' raised an
+        error (module or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting
+        system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_aide_check_audit_tools | default(true) | bool)
+- block:
+  - name: Find the sshd drop-in configuration files
+    ansible.builtin.find:
+      paths: /etc/ssh/sshd_config.d
+      patterns: '*.conf'
+    register: stigforge_sshd_dropins
+    tags:
+    - file_permissions_sshd_drop_in_config
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Find the sshd drop-in configuration files'' (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Find the sshd drop-in configuration files'' raised an error (module or templating) and was skipped;
+        continuing so later rules still run. OpenSCAP evaluates the resulting system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_file_permissions_sshd_drop_in_config | default(true)
+    | bool)
+- block:
+  - name: Set sshd drop-in files to 0600 root:root (file_permissions_sshd_drop_in_config)
+    ansible.builtin.file:
+      path: '{{ item.path }}'
+      owner: root
+      group: root
+      mode: '0600'
+    loop: '{{ stigforge_sshd_dropins.files | default([]) }}'
+    tags:
+    - file_permissions_sshd_drop_in_config
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Set sshd drop-in files to 0600 root:root (file_permissions_sshd_drop_in_config)''
+      (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Set sshd drop-in files to 0600 root:root (file_permissions_sshd_drop_in_config)'' raised an error
+        (module or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting system
+        state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_file_permissions_sshd_drop_in_config | default(true)
+    | bool)

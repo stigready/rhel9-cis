@@ -28933,7 +28933,6 @@
     ansible.builtin.getent:
       database: group
       key: ssh_keys
-    ignore_errors: true
     when:
     - '"kernel-core" in ansible_facts.packages'
     - file_groupownership_sshd_private_key_newgroup is undefined
@@ -28945,6 +28944,7 @@
     - low_disruption
     - medium_severity
     - no_reboot_needed
+    failed_when: false
   rescue:
   - name: 'StigForge: continue after error in ''Check that the ssh_keys group is defined'' (OpenSCAP is the score gate)'
     ansible.builtin.debug:

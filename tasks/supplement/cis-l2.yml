@@ -100,6 +100,27 @@
   - medium_severity
   - no_reboot_needed
 
+# EL10 (systemd 257+) ships no /etc/systemd/journald.conf, only /usr/lib/systemd/journald.conf, so the
+# lineinfile tasks below failed there ("Destination /etc/systemd/journald.conf does not exist", seen in
+# alma-10:cis-l1 2026-10-12; the rescue wrapper swallowed it but the build review counts the fatal).
+# Create a minimal override with the [Journal] section when it is missing; force: false leaves an
+# existing file (EL9) untouched.
+- name: Ensure /etc/systemd/journald.conf exists with a [Journal] section (journald_storage)
+  ansible.builtin.copy:
+    dest: /etc/systemd/journald.conf
+    content: "[Journal]\n"
+    force: false
+    owner: root
+    group: root
+    mode: '0644'
+  tags:
+  - journald_storage
+  - configure_strategy
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - no_reboot_needed
+
 # journald_compress / journald_storage. The playbook writes a drop-in under journald.conf.d, but
 # the AlmaLinux 9 rule reads /etc/systemd/journald.conf itself. Setting both keeps the drop-in and
 # satisfies a check that does not look at it.

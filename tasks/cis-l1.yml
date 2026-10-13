@@ -31899,6 +31899,32 @@
         independently.'
   when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_sshd_limit_user_access | default(true) | bool)
 - block:
+  - name: Ensure /etc/systemd/journald.conf exists with a [Journal] section (journald_storage)
+    ansible.builtin.copy:
+      dest: /etc/systemd/journald.conf
+      content: '[Journal]
+
+        '
+      force: false
+      owner: root
+      group: root
+      mode: '0644'
+    tags:
+    - journald_storage
+    - configure_strategy
+    - low_complexity
+    - low_disruption
+    - medium_severity
+    - no_reboot_needed
+  rescue:
+  - name: 'StigForge: continue after error in ''Ensure /etc/systemd/journald.conf exists with a [Journal] section (journald_storage)''
+      (OpenSCAP is the score gate)'
+    ansible.builtin.debug:
+      msg: 'StigForge: ''Ensure /etc/systemd/journald.conf exists with a [Journal] section (journald_storage)'' raised an
+        error (module or templating) and was skipped; continuing so later rules still run. OpenSCAP evaluates the resulting
+        system state independently.'
+  when: (stigforge_rules_enabled | default(true) | bool) and (rhel9cis_journald_storage | default(true) | bool)
+- block:
   - name: Set journald Compress=yes in journald.conf (journald_compress)
     ansible.builtin.lineinfile:
       path: /etc/systemd/journald.conf

@@ -1,13 +1,4 @@
 ---
-# Beyond-benchmark product hardening, moved out of the factory (decision 0021).
-#
-# sysctl_fs_suid_dumpable is NOT in the RHEL cis profile - it sits in anssi/ccn/hipaa/
-# pci-dss. rhel8_cis and ubuntu24_cis happen to ship it; rhel9_cis does not, and the
-# factory was applying it to every hardened image. Added here so removing the factory
-# block changes nothing on this cell.
-#
-# No rule-id tag on purpose: the generator derives a toggle from one, and a product
-# decision is not a per-rule opt-out.
 - name: Product hardening | Disable core dumps for SUID programs (fs.suid_dumpable)
   ansible.posix.sysctl:
     name: fs.suid_dumpable
@@ -20,12 +11,6 @@
   - low_disruption
   - no_reboot_needed
 
-# ---------------------------------------------------------------------------------------------
-# Gaps found by scans of real AMIs (stigready harvest 2026-10-08/09, archived ARF evidence), each
-# a rule the RHEL 9 CIS playbook never applies in a form the distro's own datastream accepts.
-# See claude-agents design/stigforge-coverage-backlog.md. Tasks are idempotent and carry the SSG
-# rule id so the generator gives them a toggle (rhel9cis_<rule>).
-# ---------------------------------------------------------------------------------------------
 - name: Gather the package facts for the supplement tasks
   ansible.builtin.package_facts:
     manager: auto
@@ -78,11 +63,6 @@
   - medium_severity
   - no_reboot_needed
 
-# sshd_limit_user_access (cis, cis_server_l1). The rule is satisfied by exactly one of AllowUsers,
-# AllowGroups, DenyUsers or DenyGroups in sshd_config. A cloud image cannot know a site's user
-# policy, so this adds the one restriction that never affects a customer: root is denied by name
-# (root login is already off via PermitRootLogin no). Customers who want AllowGroups set it
-# themselves. Documented as a POA&M item (decision 0059 follow-up); NOT an exemption.
 - name: Limit sshd user access by denying root by name (sshd_limit_user_access)
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
